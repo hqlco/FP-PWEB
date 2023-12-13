@@ -1,4 +1,6 @@
+DROP DATABASE IF EXISTS `laundryku`;
 CREATE DATABASE laundryku;
+use laundryku;
 -- phpMyAdmin SQL Dump
 -- version 5.2.0
 -- https://www.phpmyadmin.net/
