@@ -1,5 +1,13 @@
 <?php
 include 'db.php';
+session_start();
+
+// Check if the user is logged in and has the role of admin
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    // Redirect to another page or show an error message
+    header("Location: unauthorized.php"); // Redirect to an unauthorized page
+    exit(); // Stop further execution of the current page
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -73,7 +81,7 @@ include 'db.php';
         echo   "</div>";
         echo "</div>";
       } else {
-        $det = mysqli_query($conn, "select * from data_tahun where id='$id_brg'") or die(mysql_error());
+        $det = mysqli_query($conn, "SELECT * FROM data_tahun WHERE id='$id_brg'") or die(mysqli_error($conn));
         while ($d = mysqli_fetch_array($det)) {
       ?>
 

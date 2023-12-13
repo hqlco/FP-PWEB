@@ -2,8 +2,10 @@
 include 'db.php';
 session_start();
 
+// Check if the user is logged in and has the role of admin
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    header("Location: login.php");
+    // Redirect to another page or show an error message
+    header("Location: unauthorized.php"); // Redirect to an unauthorized page
     exit(); // Stop further execution of the current page
 }
 ?>
@@ -31,11 +33,26 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
   <!-- ini navbar Bosq-->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand text-white" href="index.php">Laundryku</a>
+      <a class="navbar-brand text-white" href="indexAdmin.php">Laundryku</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="harga.php">Harga</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+              Data Costumer
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="minggu.php">Data Minggu Ini</a></li>
+              <li><a class="dropdown-item" href="bulan.php">Data Bulan Ini</a></li>
+              <li><a class="dropdown-item" href="tahun.php">Data Tahun Ini</a></li>
+            </ul>
+          </li>
+        </ul>
         <!-- Jika tombol logout diletakkan di dalam file yang berbeda -->
         <a href="logout.php" class="btn btn-danger">Logout</a>
       </div>
