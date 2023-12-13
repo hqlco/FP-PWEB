@@ -1,5 +1,5 @@
 <?php
-include 'db.php';
+    include 'db.php';
 ?>
 
 <!DOCTYPE html>
@@ -10,7 +10,7 @@ include 'db.php';
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
 
-      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
 </head>
 <body class="bg-light">
 
@@ -27,13 +27,13 @@ include 'db.php';
 
             <div class="form-group">
                 <label for="username">Username</label>
-                <input class="form-control" type="text" name="username" placeholder="Username atau email" />
+                <input class="form-control" type="text" name="username" placeholder="Username atau email" required>
             </div>
 
 
             <div class="form-group">
                 <label for="password">Password</label>
-                <input class="form-control" type="password" name="password" placeholder="Password" />
+                <input class="form-control" type="password" name="password" placeholder="Password" required>
             </div>
 
             <input type="submit" class="btn btn-success btn-block" name="login" value="Masuk" style="margin-top: 10px;"/>
@@ -43,32 +43,20 @@ include 'db.php';
                 $username = $_POST['username'];
                 $password = $_POST['password'];
 
-                // Validate and sanitize user input to prevent SQL injection
                 $username = mysqli_real_escape_string($conn, $username);
                 $password = mysqli_real_escape_string($conn, $password);
 
-                // Query to check if the user exists
                 $query = "SELECT * FROM users WHERE (username = '$username' OR email = '$username') AND password = '$password'";
                 $result = $conn->query($query);
 
                 if ($result->num_rows == 1) {
-                    // Fetch the row data
-                    $row = $result->fetch_assoc();
-                    
-                    if ($row['usertype'] == 'admin') {
-                        session_start();
-                        $_SESSION["user_role"] = 'admin';
-                        header("Location: indexAdmin.php");
-                        exit(); // It's essential to exit after redirection
-                    } elseif ($row['usertype'] == 'user') {
-                        session_start();
-                        $_SESSION["user_role"] = 'user';
-                        header("Location: index.php");
-                        exit(); // It's essential to exit after redirection
-                    }
-                    echo "Login successful!"; // Replace this with your desired action
+                    $user = $result->fetch_assoc();
+                    session_start();             
+                    $_SESSION["user_role"] = $user['usertype'];
+                    header("Location: index.php");
+                    exit();
+                    echo "Login successful!";
                 } else {
-
                     echo '<div class="alert alert-danger d-flex align-items-center mt-2" role="alert"><div>Email atau password salah</div></div>';
                 }
             }
