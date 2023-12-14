@@ -117,7 +117,15 @@ if (!isset($_SESSION['user_role'])) {
                     <option value="Boneka">Boneka</option>
                     <option value="Lainnya">Lainnya</option>
                   </select>
+                </div>
 
+                <div class="col-sm-4">
+                  <?php
+                    $query = mysqli_query($conn, "SELECT * FROM harga");
+                    $harga =  mysqli_fetch_array($query);
+                  ?>
+                  <label>Harga:</label>
+                  <input class="form-control form-control-sm" type="text" value="<?php echo "Rp.".$harga['harga']."/KG" ?>" aria-label="readonly input example" readonly>
                 </div>
 
               </div>
