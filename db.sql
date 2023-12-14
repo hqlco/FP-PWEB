@@ -27,12 +27,35 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `username` varchar(60) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `password` varchar(60) NOT NULL,
+  `usertype` varchar(60) NOT NULL DEFAULT 'user'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `users`
+--
+
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `usertype`) VALUES
+(1, 'admin', 'admin@gmail.com', 'admin', 'admin'),
+(2, 'hafid', 'ganteng@gmail.com', '12345', 'user'),
+(3, 'hmd', 'gg@gmail.com', 'qwerty', 'user');
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `data_bulan`
 --
 
 CREATE TABLE `data_bulan` (
   `id` int(35) NOT NULL,
-  `nama` varchar(150) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `alamat` varchar(100) NOT NULL,
   `nomor` varchar(80) NOT NULL,
   `berat` varchar(68) NOT NULL,
@@ -45,8 +68,8 @@ CREATE TABLE `data_bulan` (
 -- Dumping data untuk tabel `data_bulan`
 --
 
-INSERT INTO `data_bulan` (`id`, `nama`, `alamat`, `nomor`, `berat`, `jenis`, `tanggal`, `jumlah`) VALUES
-(1, 'hahha', 'fafdasfd', '089611100101', '11', 'pakaian', '2023-12-15', '110000');
+INSERT INTO `data_bulan` (`id`, `user_id`, `alamat`, `nomor`, `berat`, `jenis`, `tanggal`, `jumlah`) VALUES
+(1, 2, 'fafdasfd', '089611100101', '11', 'pakaian', '2023-12-15', '110000');
 
 -- --------------------------------------------------------
 
@@ -56,7 +79,7 @@ INSERT INTO `data_bulan` (`id`, `nama`, `alamat`, `nomor`, `berat`, `jenis`, `ta
 
 CREATE TABLE `data_minggu` (
   `id` int(35) NOT NULL,
-  `nama` varchar(150) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `alamat` varchar(100) NOT NULL,
   `nomor` varchar(80) NOT NULL,
   `berat` varchar(68) NOT NULL,
@@ -69,8 +92,8 @@ CREATE TABLE `data_minggu` (
 -- Dumping data untuk tabel `data_minggu`
 --
 
-INSERT INTO `data_minggu` (`id`, `nama`, `alamat`, `nomor`, `berat`, `jenis`, `tanggal`, `jumlah`) VALUES
-(3, 'hahha', 'fafdasfd', '089611100101', '11', 'pakaian', '2023-12-15', '110000');
+INSERT INTO `data_minggu` (`id`, `user_id`, `alamat`, `nomor`, `berat`, `jenis`, `tanggal`, `jumlah`) VALUES
+(3, 3, 'fafdasfd', '089611100101', '11', 'pakaian', '2023-12-15', '110000');
 
 -- --------------------------------------------------------
 
@@ -80,7 +103,7 @@ INSERT INTO `data_minggu` (`id`, `nama`, `alamat`, `nomor`, `berat`, `jenis`, `t
 
 CREATE TABLE `data_tahun` (
   `id` int(35) NOT NULL,
-  `nama` varchar(150) NOT NULL,
+  `user_id` int(11) NOT NULL,
   `alamat` varchar(100) NOT NULL,
   `nomor` varchar(80) NOT NULL,
   `berat` varchar(68) NOT NULL,
@@ -106,29 +129,6 @@ CREATE TABLE `harga` (
 
 INSERT INTO `harga` (`id`, `harga`) VALUES
 (1, '10000');
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `users`
---
-
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(60) NOT NULL,
-  `email` varchar(60) NOT NULL,
-  `password` varchar(60) NOT NULL,
-  `usertype` varchar(60) NOT NULL DEFAULT 'user'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `users`
---
-
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `usertype`) VALUES
-(1, 'hafid', 'hafid', '12345', 'admin'),
-(3, 'hafid ganteng', 'ganteng@gmail.com', '123445r', 'user'),
-(4, 'hafid ganteng', 'gg@gmail.com', '123455', 'user');
 
 --
 -- Indexes for dumped tables
@@ -202,3 +202,7 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+ALTER TABLE `data_minggu` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`);
+ALTER TABLE `data_bulan` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`);
+ALTER TABLE `data_tahun` ADD FOREIGN KEY (`user_id`) REFERENCES `users`(`id`);

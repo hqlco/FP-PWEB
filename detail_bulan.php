@@ -81,7 +81,11 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
         echo   "</div>";
         echo "</div>";
       } else {
-        $det = mysqli_query($conn, "select * from data_bulan where id='$id_brg'");
+        $det = mysqli_query($conn, "SELECT data_bulan.*, users.username 
+                FROM data_bulan
+                JOIN users ON users.id = data_bulan.user_id 
+                WHERE data_bulan.id='$id_brg'") 
+               or die(mysqli_error($conn));
         while ($d = mysqli_fetch_array($det)) {
       ?>
 
@@ -97,7 +101,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
                   <tr>
                     <td>Nama</td>
-                    <td><?php echo $d['nama']; ?></td>
+                    <td><?php echo $d['username']; ?></td>
                   </tr>
 
                   <tr>

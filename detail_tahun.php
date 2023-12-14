@@ -44,7 +44,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
-              Data Costumer
+              Data Customer
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
               <li><a class="dropdown-item" href="minggu.php">Data Minggu Ini</a></li>
@@ -81,7 +81,11 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
         echo   "</div>";
         echo "</div>";
       } else {
-        $det = mysqli_query($conn, "SELECT * FROM data_tahun WHERE id='$id_brg'") or die(mysqli_error($conn));
+        $det = mysqli_query($conn, "SELECT data_tahun.*, users.username 
+                FROM data_tahun
+                JOIN users ON users.id = data_tahun.user_id 
+                WHERE data_tahun.id='$id_brg'") 
+               or die(mysqli_error($conn));
         while ($d = mysqli_fetch_array($det)) {
       ?>
 
@@ -97,7 +101,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
                   <tr>
                     <td>Nama</td>
-                    <td><?php echo $d['nama']; ?></td>
+                    <td><?php echo $d['username']; ?></td>
                   </tr>
 
                   <tr>

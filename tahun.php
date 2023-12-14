@@ -1,13 +1,11 @@
 <?php
-include 'db.php';
-session_start();
+  include 'db.php';
+  session_start();
 
-// Check if the user is logged in and has the role of admin
-if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
-    // Redirect to another page or show an error message
-    header("Location: unauthorized.php"); // Redirect to an unauthorized page
-    exit(); // Stop further execution of the current page
-}
+  if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+      header("Location: unauthorized.php");
+      exit();
+  }
 ?>
 
 <!doctype html>
@@ -55,12 +53,9 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
   </nav>
   <!-- Ini Akhir Navbar Bosq-->
 
-
-
   <!--ini awal content-->
 
   <div class="container mt-5">
-
 
     <div class="card shadow mb-4">
       <!-- Card Header - Dropdown -->
@@ -74,20 +69,18 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
           <!-- Card Body -->
           <div class="card-body">
             <?php
+              $jumlah_cos = mysqli_query($conn, "SELECT COUNT(*) as id from data_tahun");
+              $row = mysqli_fetch_array($jumlah_cos);
+              $jum = $row['id'];
 
+              $hmm = $jum;
+              $hal = 20;
+              $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
+              $start = ($page - 1) * $hal;
+              $kap = $hal * $hal;
 
-            $jumlah_cos = mysqli_query($conn, "SELECT COUNT(*) as id from data_tahun");
-            $row = mysqli_fetch_array($jumlah_cos);
-            $jum = $row['id'];
-
-            $hmm = $jum;
-            $hal = 20;
-            $page = (isset($_GET['page'])) ? (int)$_GET['page'] : 1;
-            $start = ($page - 1) * $hal;
-            $kap = $hal * $hal;
-
-            $Jumlah_y = mysqli_query($conn, "select sum(jumlah) as tor from data_tahun");
-            $jumlahd = mysqli_fetch_array($Jumlah_y);
+              $Jumlah_y = mysqli_query($conn, "select sum(jumlah) as tor from data_tahun");
+              $jumlahd = mysqli_fetch_array($Jumlah_y);
 
             ?>
 
@@ -96,117 +89,69 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
             <div class="table-responsive service">
               <table class="table table-bordered table-hover  mt-3 text-nowrap css-serial">
                 <tr>
-                  <td>
-                    <center>No
-                  </td>
-                  <td>
-                    <center>Nama
-                  </td>
-                  <td>
-                    <center>Alamat
-                  </td>
-                  <td>
-                    <center>Nomor Hp
-                  </td>
-                  <td>
-                    <center>Berat
-                  </td>
-                  <td>
-                    <center>Jenis Barang
-                  </td>
-                  <td>
-                    <center>Tanggal
-                  </td>
-                  <td>
-                    <center>Total
-                  </td>
-                  <td>
-                    <center>Hubungi
-                  </td>
-                  <td>
-                    <center>Hapus
-                  </td>
-                  <td>
-                    <center>Detail
-                  </td>
+                  <td><center>No.</td>
+                  <td><center>Nama</td>
+                  <td><center>Alamat</td>
+                  <td><center>Nomor Hp</td>
+                  <td><center>Berat</td>
+                  <td><center>Jenis Barang</td>
+                  <td><center>Tanggal</td>
+                  <td><center>Total</td>
+                  <td><center>Hubungi</td>
+                  <td><center>Hapus</td>
+                  <td><center>Detail</td>
                 </tr>
 
                 <?php
-                $query = mysqli_query($conn, "SELECT * FROM data_tahun  limit $start, $hal");
+                  $query = mysqli_query($conn, "SELECT data_tahun.*, users.username FROM data_tahun JOIN users ON users.id = data_tahun.user_id limit $start, $hal");
 
-                if (mysqli_num_rows($query) <= 0) {
-
-                  echo "<div class='col-md-10 col-sm-12 col-xs-12 ml-5'>";
-                  echo "<div class='alert alert-danger mt-4 ml-5' role='alert'>";
-                  echo "<p><center>Data Anda Masih Kosong</center></p>";
-                  echo "</div>";
-                  echo "</div>";
-                } else {
-
-
-                  while ($row = mysqli_fetch_array($query)) {
-
+                  if (mysqli_num_rows($query) <= 0) {
+                    echo "<div class='col-md-10 col-sm-12 col-xs-12 ml-5'>";
+                    echo "<div class='alert alert-danger mt-4 ml-5' role='alert'>";
+                    echo "<p><center>Data Anda Masih Kosong</center></p>";
+                    echo "</div>";
+                    echo "</div>";
+                  } 
+                  else {
+                    while ($row = mysqli_fetch_array($query)) {
                 ?>
                     <tr>
+                      <td><center><?php echo $row['id'] ?></td>
+                      <td><center><?php echo $row['username'] ?></td>
+                      <td><center><?php echo $row['alamat'] ?></td>
+                      <td><center><?php echo $row['nomor'] ?></td>
+                      <td><center><?php echo $row['berat'] . " Kg" ?></td>
+                      <td><center><?php echo $row['jenis'] ?></td>
+                      <td><center><?php echo $row['tanggal'] ?></td>
+                      <td><center>Rp.<?php echo $row['jumlah'] ?></td>
                       <td>
-                        <center><?php echo $row['id'] ?>
+                        <center><a href="https://api.whatsapp.com/send?phone=<?php echo $row['nomor']; ?>&text=Assalamualaikum%20<?php echo $row['username'] ?>%20Barang%20Anda%20Selesai%20DiLaundry "><button type="button" class="btn btn-success mt-2 mb-2">Hubungi</button></a>
                       </td>
                       <td>
-                        <center><?php echo $row['nama'] ?>
+                        <center><a href="delete.php?id=<?php echo $row['id'] ?>"><button type="button" class="btn btn-warning mt-2 mb-2">Hapus</button></a>
                       </td>
                       <td>
-                        <center><?php echo $row['alamat'] ?>
+                        <center><a href="detail.php?id=<?php echo $row['id'] ?>"><button type="button" class="btn btn-primary mt-2 mb-2">Detail</button></a>
                       </td>
-                      <td>
-                        <center><?php echo $row['nomor'] ?>
-                      </td>
-                      <td>
-                        <center><?php echo $row['berat'] . " Kg" ?>
-                      </td>
-                      <td>
-                        <center><?php echo $row['jenis'] ?>
-                      </td>
-                      <td>
-                        <center><?php echo $row['tanggal'] ?>
-                      </td>
-                      <td>
-                        <center>Rp.<?php echo $row['jumlah'] ?>
-                      </td>
-                      <td>
-                        <center><a href="https://api.whatsapp.com/send?phone=<?php echo $row['nomor']; ?>&text=Assalamualaikum%20<?php echo $row['nama'] ?>%20Barang%20Anda%20Selesai%20DiLaundry "><button type="button" class="btn btn-success mt-2 mb-2">Hubungi</button></a>
-                      </td>
-                      <td>
-                        <center><a href="delete_tahun.php?id=<?php echo $row['id'] ?>"><button type="button" class="btn btn-warning mt-2 mb-2"> Hapus</button></a>
-                      </td>
-                      <td>
-                        <center><a href="detail_tahun.php?id=<?php echo $row['id'] ?>"><button type="button" class="btn btn-primary mt-2 mb-2">Detail</button></a>
                     </tr>
                 <?php
+                    }
                   }
-                }
                 ?>
-
               </table>
 
               <nav aria-label="Page navigation example">
                 <ul class="pagination">
                   <?php
-                  for ($x = 1; $x <= $hal; $x++) {
+                    for ($x = 1; $x <= $hal; $x++) {
                   ?>
-                    <li class="page-item"><a class="page-link" href="?page=<?php echo $x ?>"><?php echo $x ?></a></li>
+                      <li class="page-item"><a class="page-link" href="?page=<?php echo $x ?>"><?php echo $x ?></a></li>
                   <?php
-                  }
-
+                    }
                   ?>
-
-
-
                 </ul>
               </nav>
             </div>
-
-
-
 
           </div>
         </div>
@@ -214,15 +159,10 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
       <div class="row mb-4 ml-5">
 
         <div class="col-sm-7">
-
-
         </div>
-
 
         <div class="col-sm-2">
-
         </div>
-
 
         <div class="col-sm-3">
           <a href="export_tahun.php"><button type="button" class="btn btn-info mt-4">Export Excel</button></a>
@@ -230,16 +170,10 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
       </div>
 
-
-
-
-
     </div>
   </div>
 
   <!--ini akhir content bosq-->
-
-
 
   <!-- Optional JavaScript -->
   <!-- Popper.js first, then Bootstrap JS -->
