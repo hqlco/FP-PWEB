@@ -29,7 +29,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
         	  $query = mysqli_query($conn, "SELECT * FROM data_bulan");
         while($row = mysqli_fetch_array($query)){
 
-  $nama = $row['nama'];
+  $user_id = $row['user_id'];
   $alamat = $row['alamat'];
   $nomor = $row['nomor'];
   $berat = $row['berat'];
@@ -39,7 +39,7 @@ if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 
   $insert = mysqli_query($conn, "INSERT INTO data_tahun VALUES (
     NULL,
-  '$nama',
+  '$user_id',
   '$alamat',
   '$nomor',
   '$berat',
