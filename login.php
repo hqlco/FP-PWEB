@@ -105,6 +105,7 @@
                     $user = $result->fetch_assoc();
                     session_start();             
                     $_SESSION["user_role"] = $user['usertype'];
+                    $_SESSION["user_id"] = $user['id'];
                     header("Location: index.php");
                     exit();
                     echo "Login successful!";
